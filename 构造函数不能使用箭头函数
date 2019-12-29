@@ -1,0 +1,13 @@
+原因：
+
+因为箭头函数中的this始终与函数调用时的环境中的this保持一致，换句话说 如果可以使用箭头函数作为构造函数的话（实际不能） 这会导致实例中的this不指向原型
+
+在《You Don't Know JS》一书中，我们了解到当使用 new 来调用函数时，JS会自动执行下面的操作。
+
+“ When a function is invoked with new in front of it, otherwise known as a constructor call, the following things are done automatically:
+1.a brand new object is created (aka, constructed) out of thin air
+2.the newly constructed object is [[Prototype]]-linked
+3.the newly constructed object is set as the this binding for that function call
+4.unless the function returns its own alternate object, the new-invoked function call will automatically return the newly constructed object. ”
+
+很显然，箭头函数不符合上述4步中的第三步。
