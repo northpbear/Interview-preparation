@@ -1,0 +1,23 @@
+一、浅拷贝
+  1. Object.assign()
+  2. ...展开运算符
+  3. for...in...
+二、深拷贝
+  1. 递归实现：
+    function deepClone(obj) {
+      let objClone = Array.isArray(obj) ? [] : {};
+      if(obj && typeof obj === "object") {
+        for(key in obj) {
+          if(obj.hasOwnProperty(key)) {
+            if(obj[key] && typeof obj[key] === "object") {
+              objClone[key] = deepClone(obj[key]);
+            }else{
+              objClone[key] = obj[key];
+            }
+          }
+        }
+      }
+      return objClone
+    }
+  2. 利用JSON.stringify和JSON.parse：
+    let deepClone = JSON.parse(JSON.stringify(obj));
