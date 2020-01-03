@@ -1,0 +1,16 @@
+1.typeof 
+  对于6种基本数据类型：
+    可以判断出underfind, number, string, boolean, symbol
+    null的判断类型为object
+  对于引用数据类型：
+    除了Function会返回function外，其余均为object
+
+2.instanceof
+  如果判断string，number，boolean类型不能使用字面量形式创建，需要使用构造函数创建
+  无法判断null和undefined
+  
+3. Object.prototype.toString.call()
+  通过返回值可以完美的判断所有的数据类型
+  
+  
+NaN表示不是数字，但其类型为number
