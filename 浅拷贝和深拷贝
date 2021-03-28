@@ -3,21 +3,24 @@
   2. ...展开运算符
   3. for...in...
 二、深拷贝
-  1. 递归实现：
-    function deepClone(obj) {
-      let objClone = Array.isArray(obj) ? [] : {};
-      if(obj && typeof obj === "object") {
-        for(key in obj) {
-          if(obj.hasOwnProperty(key)) {
-            if(obj[key] && typeof obj[key] === "object") {
-              objClone[key] = deepClone(obj[key]);
-            }else{
-              objClone[key] = obj[key];
-            }
-          }
-        }
-      }
-      return objClone
-    }
-  2. 利用JSON.stringify和JSON.parse：
-    let deepClone = JSON.parse(JSON.stringify(obj));
+const isComplexDataType = obj => (typeof obj === 'object' || typeof obj === 'function') && (obj !== null)
+//使用WeakMap作为hashMap 以防止内存溢出
+const deepClone = function (obj, hash = new WeakMap()) {
+  if (obj.constructor === Date) 
+  return new Date(obj)       // 日期对象直接返回一个新的日期对象
+  if (obj.constructor === RegExp)
+  return new RegExp(obj)     //正则对象直接返回一个新的正则对象
+  //循环引用使用 hashMap 处理 防止死循环
+  if (hash.has(obj)) return hash.get(obj)
+  //获取对象的所有自身属性
+  let allDesc = Object.getOwnPropertyDescriptors(obj)
+  //通过对象的原型 创建一个新对象（以继承其原型链），并加入它自身的所有属性，但此时该克隆对象中引用类型的属性值仍为被克隆对象对应值的内存引用
+  let cloneObj = Object.create(Object.getPrototypeOf(obj), allDesc)
+
+  hash.set(obj, cloneObj)
+  //使用Reflect.ownKeys处理key为Symbol的属性以及不可枚举的属性，等同于Object.getOwnPropertyNames(target).concat(Object.getOwnPropertySymbols(target))
+  for (let key of Reflect.ownKeys(obj)) { 
+    cloneObj[key] = (isComplexDataType(obj[key]) && typeof obj[key] !== 'function') ? deepClone(obj[key], hash) : obj[key]
+  }
+  return cloneObj
+}
